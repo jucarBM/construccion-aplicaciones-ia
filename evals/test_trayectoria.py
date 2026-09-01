@@ -13,6 +13,8 @@ tanto en DeepEval como en OpenTelemetry. Esto sirve, aunque conviene revisarlo
 cada tanto.
 """
 
+import os
+
 import pytest
 from deepeval import assert_test
 from deepeval.metrics import ToolCorrectnessMetric
@@ -43,6 +45,10 @@ CAMINOS = [
 ]
 
 
+# DeepEval pide la clave del juez incluso para esta métrica, que solo
+# compara listas de herramientas y no llama a ningún modelo.
+@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"),
+                    reason="DeepEval exige OPENAI_API_KEY aunque esta métrica no juzgue con modelo")
 @pytest.mark.parametrize("caso", CAMINOS, ids=lambda c: c["id"])
 def test_camino(caso):
     prueba = LLMTestCase(

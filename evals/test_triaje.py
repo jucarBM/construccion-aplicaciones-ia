@@ -18,6 +18,7 @@ Necesita una clave para el modelo juez, aparte de la del servicio.
 """
 
 import json
+import os
 import pathlib
 
 import pytest
@@ -62,19 +63,28 @@ def test_acierto_global():
 
 # --- 2. lo que necesita un juez --------------------------------------------
 
-evidencia_sostiene = GEval(
-    name="La evidencia sostiene la decisión",
-    evaluation_steps=[
-        "Verificá que la evidencia sea una frase textual del mensaje de entrada, no un resumen.",
-        "Verificá que esa frase justifique el área asignada.",
-        "Penalizá que la evidencia esté vacía o sea genérica.",
-        "No penalices diferencias de redacción ni de mayúsculas.",
-    ],
-    evaluation_params=[SingleTurnParams.INPUT, SingleTurnParams.ACTUAL_OUTPUT],
-    threshold=0.7,
-)
+def evidencia_sostiene():
+    """El juez se arma dentro de la prueba, no al importar el archivo.
+
+    Construirlo arriba obligaba a tener la clave del juez para que pytest
+    pudiera siquiera recolectar, y entonces las dos pruebas de == tampoco
+    corrían. Así, quien no tenga esa clave sigue pudiendo medir el acierto.
+    """
+    return GEval(
+        name="La evidencia sostiene la decisión",
+        evaluation_steps=[
+            "Verifica que la evidencia sea una frase textual del mensaje de entrada, no un resumen.",
+            "Verifica que esa frase justifique el área asignada.",
+            "Penaliza que la evidencia esté vacía o sea genérica.",
+            "No penalices diferencias de redacción ni de mayúsculas.",
+        ],
+        evaluation_params=[SingleTurnParams.INPUT, SingleTurnParams.ACTUAL_OUTPUT],
+        threshold=0.7,
+    )
 
 
+@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"),
+                    reason="hace falta la clave del modelo juez (OPENAI_API_KEY)")
 @pytest.mark.parametrize("caso", casos()[:10], ids=lambda c: c["id"])
 def test_evidencia(caso):
     s = Salida.model_validate(triar(caso["texto"]))
@@ -83,4 +93,4 @@ def test_evidencia(caso):
         actual_output=f"área: {s.area} · evidencia: {s.evidencia}",
         expected_output=caso["area"],
     )
-    assert_test(prueba, [evidencia_sostiene])
+    assert_test(prueba, [evidencia_sostiene()])

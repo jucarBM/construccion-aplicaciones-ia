@@ -50,9 +50,11 @@ pytest evals/ -q                  # rápido
 deepeval test run evals/          # con el informe de DeepEval
 ```
 
-`test_area` y `test_acierto_global` comparan con `==` y no necesitan modelo
-juez. `test_evidencia` sí: usa GEval con criterios en castellano, y para eso
-hace falta una clave aparte de la del servicio.
+`test_area` y `test_acierto_global` comparan con `==` y corren solo con la
+clave del servicio. `test_evidencia` usa GEval con criterios en castellano y
+necesita además `OPENAI_API_KEY`, la del modelo juez; sin ella se salta sola,
+igual que `test_camino`, porque DeepEval pide esa clave para arrancar aunque
+la métrica no juzgue con modelo.
 
 El conjunto de `evals/conjunto.jsonl` está congelado. Si se le agregan casos
 cada vez que algo falla, los números dejan de ser comparables entre corridas.
