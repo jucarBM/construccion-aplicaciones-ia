@@ -1,0 +1,50 @@
+{"id": "RCL-001", "texto": "Me cobraron dos veces la factura de marzo y nadie me responde.", "canal": "correo"}
+{"id": "RCL-002", "texto": "No me anda el internet desde ayer a la noche.", "canal": "chat"}
+{"id": "RCL-003", "texto": "Quisiera saber qué planes tienen para empresas.", "canal": "formulario"}
+{"id": "RCL-004", "texto": "Buenos días, quería consultar el horario de atención.", "canal": "correo"}
+{"id": "RCL-005", "texto": "La factura llegó con un monto que no corresponde al plan que contraté.", "canal": "chat"}
+{"id": "RCL-006", "texto": "El módem prende y apaga solo cada diez minutos.", "canal": "formulario"}
+{"id": "RCL-007", "texto": "Me quiero dar de baja del servicio, ya lo hablé tres veces.", "canal": "correo"}
+{"id": "RCL-008", "texto": "¿Puedo pagar con tarjeta de otro banco?", "canal": "chat"}
+{"id": "RCL-009", "texto": "Hace una semana que no tengo señal y ya perdí dos días de trabajo.", "canal": "formulario"}
+{"id": "RCL-010", "texto": "Quiero felicitar al técnico que vino ayer, muy amable.", "canal": "correo"}
+{"id": "RCL-011", "texto": "Me siguen debitando después de haber cancelado el servicio.", "canal": "chat"}
+{"id": "RCL-012", "texto": "La velocidad que contraté no es la que estoy recibiendo.", "canal": "formulario"}
+{"id": "RCL-013", "texto": "Necesito una factura a nombre de mi empresa, no personal.", "canal": "correo"}
+{"id": "RCL-014", "texto": "¿Tienen promoción por traer un amigo?", "canal": "chat"}
+{"id": "RCL-015", "texto": "El técnico no vino en el horario pactado y perdí la mañana.", "canal": "formulario"}
+{"id": "RCL-016", "texto": "Me cobraron una instalación que era sin costo según el vendedor.", "canal": "correo"}
+{"id": "RCL-017", "texto": "Quiero cambiar mi plan a uno más económico.", "canal": "chat"}
+{"id": "RCL-018", "texto": "No puedo entrar a mi cuenta en la página, dice contraseña incorrecta.", "canal": "formulario"}
+{"id": "RCL-019", "texto": "¿Dónde queda la oficina más cercana?", "canal": "correo"}
+{"id": "RCL-020", "texto": "Llevo cuatro meses reclamando lo mismo y nadie resuelve nada.", "canal": "chat"}
+{"id": "RCL-001a", "texto": "Me cobraron dos veces la factura de marzo y nadie me responde.", "canal": "formulario"}
+{"id": "RCL-002a", "texto": "No me anda el internet desde ayer a la noche.", "canal": "correo"}
+{"id": "RCL-003a", "texto": "Quisiera saber qué planes tienen para empresas.", "canal": "chat"}
+{"id": "RCL-004a", "texto": "Buenos días, quería consultar el horario de atención.", "canal": "formulario"}
+{"id": "RCL-005a", "texto": "La factura llegó con un monto que no corresponde al plan que contraté.", "canal": "correo"}
+{"id": "RCL-006a", "texto": "El módem prende y apaga solo cada diez minutos.", "canal": "chat"}
+{"id": "RCL-007a", "texto": "Me quiero dar de baja del servicio, ya lo hablé tres veces.", "canal": "formulario"}
+{"id": "RCL-008a", "texto": "¿Puedo pagar con tarjeta de otro banco?", "canal": "correo"}
+{"id": "RCL-009a", "texto": "Hace una semana que no tengo señal y ya perdí dos días de trabajo.", "canal": "chat"}
+{"id": "RCL-010a", "texto": "Quiero felicitar al técnico que vino ayer, muy amable.", "canal": "formulario"}
+{"id": "RCL-011a", "texto": "Me siguen debitando después de haber cancelado el servicio.", "canal": "correo"}
+{"id": "RCL-012a", "texto": "La velocidad que contraté no es la que estoy recibiendo.", "canal": "chat"}
+{"id": "RCL-013a", "texto": "Necesito una factura a nombre de mi empresa, no personal.", "canal": "formulario"}
+{"id": "RCL-014a", "texto": "¿Tienen promoción por traer un amigo?", "canal": "correo"}
+{"id": "RCL-015a", "texto": "El técnico no vino en el horario pactado y perdí la mañana.", "canal": "chat"}
+{"id": "RCL-016a", "texto": "Me cobraron una instalación que era sin costo según el vendedor.", "canal": "formulario"}
+{"id": "RCL-017a", "texto": "Quiero cambiar mi plan a uno más económico.", "canal": "correo"}
+{"id": "RCL-018a", "texto": "No puedo entrar a mi cuenta en la página, dice contraseña incorrecta.", "canal": "chat"}
+{"id": "RCL-019a", "texto": "¿Dónde queda la oficina más cercana?", "canal": "formulario"}
+{"id": "RCL-020a", "texto": "Llevo cuatro meses reclamando lo mismo y nadie resuelve nada.", "canal": "correo"}
+{"id": "RCL-001b", "texto": "Me cobraron dos veces la factura de marzo y nadie me responde.", "canal": "chat"}
+{"id": "RCL-002b", "texto": "No me anda el internet desde ayer a la noche.", "canal": "formulario"}
+{"id": "RCL-003b", "texto": "Quisiera saber qué planes tienen para empresas.", "canal": "correo"}
+{"id": "RCL-004b", "texto": "Buenos días, quería consultar el horario de atención.", "canal": "chat"}
+{"id": "RCL-005b", "texto": "La factura llegó con un monto que no corresponde al plan que contraté.", "canal": "formulario"}
+{"id": "RCL-006b", "texto": "El módem prende y apaga solo cada diez minutos.", "canal": "correo"}
+{"id": "RCL-007b", "texto": "Me quiero dar de baja del servicio, ya lo hablé tres veces.", "canal": "chat"}
+{"id": "RCL-008b", "texto": "¿Puedo pagar con tarjeta de otro banco?", "canal": "formulario"}
+{"id": "RCL-009b", "texto": "Hace una semana que no tengo señal y ya perdí dos días de trabajo.", "canal": "correo"}
+{"id": "RCL-010b", "texto": "Quiero felicitar al técnico que vino ayer, muy amable.", "canal": "chat"}
