@@ -17,6 +17,7 @@ lo bastante firme para producción; lo de agentes todavía se mueve.
 
 import base64
 import os
+import threading
 from contextlib import contextmanager
 
 from opentelemetry import trace
@@ -29,12 +30,25 @@ SERVICIO = os.getenv("OTEL_SERVICE_NAME", "triaje-reclamos")
 LANGFUSE_HOST = os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
 
 _listo = False
+_candado = threading.Lock()
+
+
+def _placeholder(v: str | None) -> bool:
+    """El .env.example trae `pk-lf-...` y `sk-lf-...` de muestra.
+
+    Como no están vacías, se tomaban por claves buenas: se instalaba el
+    exportador y cada petición dejaba un `Failed to export span batch code:
+    401` en pantalla desde la sesión 2, que es justo donde las trazas no
+    interesan todavía. Una clave que termina en puntos suspensivos no es una
+    clave.
+    """
+    return not v or v.endswith("...") or v in {"pk-lf-", "sk-lf-"}
 
 
 def _exportador():
     pk = os.getenv("LANGFUSE_PUBLIC_KEY")
     sk = os.getenv("LANGFUSE_SECRET_KEY")
-    if not (pk and sk):
+    if _placeholder(pk) or _placeholder(sk):
         # Devolver None significa no instalar ningún exportador: se sigue
         # midiendo, pero nada se imprime ni se manda a ningún lado.
         return ConsoleSpanExporter() if os.getenv("TRAZAS") == "consola" else None
@@ -50,16 +64,25 @@ def _exportador():
 
 
 def iniciar() -> None:
-    """Se llama una vez, al arrancar el proceso."""
+    """Se llama una vez, al arrancar el proceso.
+
+    El candado no es adorno: el lote de la sesión 4 abre ocho hilos a la vez y
+    todos llaman a tracer() casi al mismo tiempo. Sin él, varios veían _listo
+    en False y OpenTelemetry contestaba «Overriding of current TracerProvider
+    is not allowed» en la primera línea de la corrida.
+    """
     global _listo
     if _listo:
         return
-    proveedor = TracerProvider(resource=Resource.create({"service.name": SERVICIO}))
-    exportador = _exportador()
-    if exportador is not None:
-        proveedor.add_span_processor(BatchSpanProcessor(exportador))
-    trace.set_tracer_provider(proveedor)
-    _listo = True
+    with _candado:
+        if _listo:
+            return
+        proveedor = TracerProvider(resource=Resource.create({"service.name": SERVICIO}))
+        exportador = _exportador()
+        if exportador is not None:
+            proveedor.add_span_processor(BatchSpanProcessor(exportador))
+        trace.set_tracer_provider(proveedor)
+        _listo = True
 
 
 def tracer():

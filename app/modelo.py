@@ -9,25 +9,26 @@ import os
 
 from openai import OpenAI
 
+from app import exigir
 from app.trazas import span_modelo
 
 MODELO = os.getenv("MODELO", "openai/gpt-4o-mini")
 
 cliente = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=os.environ["OPENROUTER_API_KEY"],
+    api_key=exigir("OPENROUTER_API_KEY", "la clave del proveedor de modelos"),
 )
 
-SISTEMA = """Clasificás reclamos de una empresa de servicios.
+SISTEMA = """Clasificas reclamos de una empresa de servicios.
 
-Devolvés únicamente un objeto JSON con estas cuatro claves:
+Devuelves únicamente un objeto JSON con estas cuatro claves:
   area        facturacion | tecnico | comercial | otros
   urgencia    baja | media | alta
   confianza   número entre 0 y 1
-  evidencia   la frase textual del mensaje en la que te apoyás
+  evidencia   la frase textual del mensaje en la que te apoyas
 
-No explicás. No agregás claves. Si el mensaje no alcanza para decidir,
-devolvés area "otros" con confianza baja."""
+No explicas. No agregas claves. Si el mensaje no alcanza para decidir,
+devuelves area "otros" con confianza baja."""
 
 
 def triar(texto: str) -> dict:

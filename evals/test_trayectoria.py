@@ -31,7 +31,7 @@ CAMINOS = [
     {
         "id": "sin-datos",
         "pregunta": "Quiero saber de mi reclamo.",
-        "respuesta": "¿Me pasás el número de caso?",
+        "respuesta": "¿Me pasa el número de caso?",
         "usadas": [],
         "esperadas": [],
     },

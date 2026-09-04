@@ -7,7 +7,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from pydantic import ValidationError
 
-from app import trazas
+from app import exigir, trazas
 from app.chat import router as router_chat
 from app.esquemas import Entrada, Salida
 from app.modelo import triar
@@ -28,7 +28,7 @@ def clave(x_api_key: str | None = Header(default=None)):
     responde 422 cuando falta, que es un error de validación. Faltar la
     credencial no es un problema de forma, así que corresponde 401.
     """
-    if x_api_key != os.environ["API_KEY"]:
+    if x_api_key != exigir("API_KEY", "la clave que su servicio le exige a quien lo llama"):
         raise HTTPException(401, "clave inválida")
 
 

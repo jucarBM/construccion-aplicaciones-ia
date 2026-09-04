@@ -23,6 +23,9 @@ cp .env.example .env    # completar OPENROUTER_API_KEY y API_KEY
 uvicorn app.main:app --reload
 ```
 
+El `.env` lo lee la aplicación sola, sin exportar nada a mano. Si falta una
+clave, el arranque dice cuál falta y dónde ponerla.
+
 Y en otra terminal:
 
 ```bash
@@ -49,6 +52,16 @@ mensaje guarda su estado. Correrlo dos veces no duplica nada.
 pytest evals/ -q                  # rápido
 deepeval test run evals/          # con el informe de DeepEval
 ```
+
+**Se espera que unos doce `test_area` queden en rojo, y está bien.** La línea
+de base es 76% de acierto sobre cincuenta casos, así que una docena no coincide
+con la etiqueta humana. Eso no quiere decir que el laboratorio esté roto: sirve
+para mirar *cuáles* falla. El número que dice si el sistema está en pie es
+`test_acierto_global`, que sí falla de verdad si el acierto cae del 70%.
+
+La corrida manda los cincuenta casos al modelo una vez —no una vez por prueba—
+y tarda unos tres minutos. Con `-x` se corta en el primero, que no es lo que
+se quiere acá: conviene dejarla terminar y leer el porcentaje.
 
 `test_area` y `test_acierto_global` comparan con `==` y corren solo con la
 clave del servicio. `test_evidencia` usa GEval con criterios en castellano y

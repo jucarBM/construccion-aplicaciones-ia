@@ -38,11 +38,32 @@ def casos():
     return [json.loads(l) for l in CONJUNTO.read_text(encoding="utf8").splitlines() if l.strip()]
 
 
+# Cada caso se manda al modelo una sola vez por corrida. Antes `test_area` y
+# `test_acierto_global` lo pedían cada uno por su lado: cien llamadas para medir
+# cincuenta casos, el doble de plata y el doble de espera dentro del punto de
+# control. El resultado se guarda acá y las dos pruebas leen lo mismo.
+_salidas: dict[str, Salida] = {}
+
+
+def salida(caso) -> Salida:
+    if caso["id"] not in _salidas:
+        _salidas[caso["id"]] = Salida.model_validate(triar(caso["texto"]))
+    return _salidas[caso["id"]]
+
+
 # --- 1. lo que se compara con == -------------------------------------------
 
 @pytest.mark.parametrize("caso", casos(), ids=lambda c: c["id"])
 def test_area(caso):
-    s = Salida.model_validate(triar(caso["texto"]))
+    """Ojo: se espera que algunos fallen.
+
+    La línea de base es 76% de acierto, así que sobre cincuenta casos hay una
+    docena en rojo y eso NO significa que el laboratorio esté roto: son los
+    casos que el modelo no clasifica como la persona que los etiquetó. El
+    número que dice si el sistema está bien es `test_acierto_global`. Estos
+    cincuenta sirven para mirar cuáles falla, que es distinto.
+    """
+    s = salida(caso)
     assert s.area == caso["area"], f"esperaba {caso['area']}, devolvió {s.area}"
 
 
@@ -52,10 +73,9 @@ def test_acierto_global():
     76% sale de 38 sobre 50, y el techo es el acuerdo entre dos personas, que
     en este conjunto dio 78%. Pedirle más al modelo que a las personas no
     tiene sentido."""
-    aciertos = sum(
-        Salida.model_validate(triar(c["texto"])).area == c["area"] for c in casos()
-    )
-    total = len(casos())
+    todos = casos()
+    aciertos = sum(salida(c).area == c["area"] for c in todos)
+    total = len(todos)
     acierto = aciertos / total
     print(f"\nacierto {aciertos}/{total} = {acierto:.0%}")
     assert acierto >= 0.70, f"el acierto cayó a {acierto:.0%}"
@@ -87,7 +107,7 @@ def evidencia_sostiene():
                     reason="hace falta la clave del modelo juez (OPENAI_API_KEY)")
 @pytest.mark.parametrize("caso", casos()[:10], ids=lambda c: c["id"])
 def test_evidencia(caso):
-    s = Salida.model_validate(triar(caso["texto"]))
+    s = salida(caso)
     prueba = LLMTestCase(
         input=caso["texto"],
         actual_output=f"área: {s.area} · evidencia: {s.evidencia}",
