@@ -1,11 +1,12 @@
-# Laboratorio · sesión 2
+# Solución de referencia · sesión 2
 
-Hoy se construye el primer servicio del sistema de triaje de reclamos: una API
-que recibe un mensaje, llama al modelo y devuelve una salida estructurada.
+Esta rama contiene el primer servicio del sistema de triaje de reclamos: una
+API que recibe un mensaje, llama al modelo y devuelve una salida estructurada.
 
-Este repositorio es un **andamio para escribir en clase**. En `main` solo está
-la estructura mínima para comenzar. No incluye todavía el chatbot, el lote, la
-evaluación ni el despliegue: esas piezas se agregan en las sesiones siguientes.
+La rama `main` es el andamio para escribir en clase. Esta rama
+`rescate/sesion-2` contiene la solución completa de hoy para comparar cuando
+alguien se traba. No incluye todavía el chatbot, el lote, la evaluación ni el
+despliegue: esas piezas se agregan en las sesiones siguientes.
 
 ## Antes de escribir
 
@@ -24,14 +25,13 @@ cp .env.example .env
 Abra `.env`, reemplace los dos valores de muestra y deje el archivo fuera del
 repositorio. La clave del proveedor y la clave que protege su API son distintas.
 
-## El recorrido de la clase
+## Lo que debe quedar funcionando
 
-1. Levante el esqueleto y compruebe `GET /salud`.
-2. Escriba `Entrada` y `Salida` en `app/esquemas.py`.
-3. Escriba la llamada al proveedor en `app/modelo.py`.
-4. Complete `POST /reclamos` en `app/main.py`.
-5. Valide la entrada y la salida, y limite los reintentos.
-6. Agregue la clave `X-API-Key` y pruebe los errores.
+1. `Entrada` y `Salida` definen el contrato en `app/esquemas.py`.
+2. `app/modelo.py` mantiene aislada la llamada al proveedor.
+3. `POST /reclamos` valida la entrada y la salida.
+4. El endpoint exige la cabecera `X-API-Key`.
+5. Una salida inválida se reintenta una vez y luego va a `422`.
 
 Arranque el servidor:
 
@@ -80,6 +80,10 @@ cd triaje-reclamos-rescate
 
 La rama de rescate contiene únicamente la solución de hoy. No es necesario
 copiarla al proyecto original ni usarla si el endpoint ya funciona.
+
+Si el proveedor no está disponible, agregue `DEMO_MODE=1` al `.env`: la rama
+devuelve una salida fija para poder probar el circuito HTTP sin gastar tokens.
+Ese modo es solo para destrabar la clase, no para evaluar el triaje.
 
 ## Encargo
 

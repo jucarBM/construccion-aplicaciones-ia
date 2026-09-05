@@ -9,17 +9,45 @@ from app import exigir
 
 
 MODELO = os.getenv("MODELO", "openai/gpt-4o-mini")
+DEMO_MODE = os.getenv("DEMO_MODE") == "1"
 
-# TODO: cree el cliente con base_url de OpenRouter y OPENROUTER_API_KEY.
-
+if DEMO_MODE:
+    cliente = None
+else:
+    cliente = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=exigir("OPENROUTER_API_KEY", "la clave del proveedor de modelos"),
+    )
 
 SISTEMA = """Clasificas reclamos de una empresa de servicios.
 
-Devuelves únicamente un objeto JSON con area, urgencia, confianza y evidencia.
-No explicas ni agregas claves. Si el mensaje no alcanza para decidir, usa area
-otros y confianza baja."""
+Devuelves únicamente un objeto JSON con estas cuatro claves:
+  area        facturacion | tecnico | comercial | otros
+  urgencia    baja | media | alta
+  confianza   número entre 0 y 1
+  evidencia   la frase textual del mensaje en la que te apoyas
+
+No explicas. No agregas claves. Si el mensaje no alcanza para decidir,
+devuelves area "otros" con confianza baja."""
 
 
 def triar(texto: str) -> dict:
-    """TODO: llame al modelo, pida JSON y devuelva json.loads de su respuesta."""
-    raise NotImplementedError
+    """Devuelve el diccionario crudo del modelo. Quien llama lo valida."""
+    if DEMO_MODE:
+        return {
+            "area": "otros",
+            "urgencia": "media",
+            "confianza": 0.5,
+            "evidencia": "modo de demostración: respuesta fija",
+        }
+
+    respuesta = cliente.chat.completions.create(
+        model=MODELO,
+        temperature=0,
+        response_format={"type": "json_object"},
+        messages=[
+            {"role": "system", "content": SISTEMA},
+            {"role": "user", "content": texto},
+        ],
+    )
+    return json.loads(respuesta.choices[0].message.content)
