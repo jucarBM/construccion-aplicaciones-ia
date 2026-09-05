@@ -3,11 +3,13 @@
 import json
 
 from fastapi import Depends, FastAPI, Header, HTTPException
+from openai import APIStatusError, RateLimitError
 from pydantic import ValidationError
 
 from app import exigir
 from app.esquemas import Entrada, Salida
 from app.modelo import triar
+from app.verificar import cuadra
 
 app = FastAPI(title="Triaje de reclamos", version="1.0.0")
 
@@ -30,9 +32,22 @@ def salud():
 
 @app.post("/reclamos", response_model=Salida, dependencies=[Depends(clave)])
 def clasificar(e: Entrada) -> Salida:
+    # Se contrasta antes de gastar un token: si el cliente cita una factura que
+    # el ERP no tiene, la clasificación no cambia nada y el caso va a una
+    # persona igual.
+    motivo = cuadra(e.texto)
+    if motivo:
+        raise HTTPException(409, motivo)
+
     for _ in range(2):
         try:
             return Salida.model_validate(triar(e.texto))
         except (json.JSONDecodeError, ValidationError):
             continue
+        except RateLimitError:
+            # El límite del proveedor no es culpa de quien llama, así que se le
+            # devuelve el mismo código para que sepa que puede reintentar.
+            raise HTTPException(429, "límite del proveedor, reintentar con espera")
+        except APIStatusError:
+            raise HTTPException(502, "el proveedor falló")
     raise HTTPException(422, "salida no válida")

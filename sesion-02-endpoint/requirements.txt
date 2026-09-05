@@ -2,3 +2,7 @@ fastapi>=0.115
 uvicorn[standard]>=0.32
 pydantic>=2.9
 openai>=1.54
+
+# Las pruebas de contrato, que corren sin clave y sin red
+pytest>=8.3
+httpx>=0.27

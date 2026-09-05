@@ -1,0 +1,4 @@
+{"numero": "88-4412", "titular": "Ana Quispe", "monto": 149.90, "estado": "emitida"}
+{"numero": "88-4471", "titular": "Luis Mendoza", "monto": 89.00, "estado": "emitida"}
+{"numero": "88-4502", "titular": "Sara Rojas", "monto": 210.50, "estado": "pagada"}
+{"numero": "88-4518", "titular": "Ana Quispe", "monto": 149.90, "estado": "emitida", "anulada": true}
