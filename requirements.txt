@@ -1,14 +1,5 @@
-# El servicio
 fastapi>=0.115
 uvicorn[standard]>=0.32
 pydantic>=2.9
 openai>=1.54
-
-# Observabilidad (sesión 6)
-opentelemetry-sdk>=1.29
-opentelemetry-exporter-otlp-proto-http>=1.29
-opentelemetry-instrumentation-fastapi>=0.50b0
-
-# Evaluación (sesión 5) — solo hace falta para correr evals/
-deepeval>=2.0
-pytest>=8.3
+flask>=3.1

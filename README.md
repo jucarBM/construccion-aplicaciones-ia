@@ -1,91 +1,87 @@
-# Triaje de reclamos
+# Laboratorio · sesión 2
 
-El sistema que se construye a lo largo de las seis sesiones de **Construcción
-de Aplicaciones Impulsadas por IA**. Una empresa recibe 300 mensajes diarios en
-texto libre; esto los clasifica, los procesa por lote, se mide y se despliega.
+Hoy se construye el primer servicio del sistema de triaje de reclamos: una API
+que recibe un mensaje, llama al modelo y devuelve una salida estructurada.
 
-No hay que escribirlo en clase. Cada sesión usa la parte que le toca.
+Este repositorio es un **andamio para escribir en clase**. En `main` solo está
+la estructura mínima para comenzar. No incluye todavía el chatbot, el lote, la
+evaluación ni el despliegue: esas piezas se agregan en las sesiones siguientes.
 
-| Sesión | Archivo | Qué se hace |
-|---|---|---|
-| 2 · APIs | `app/esquemas.py`, `app/modelo.py`, `app/main.py` | El endpoint, la validación de ida y vuelta, la clave |
-| 3 · Chatbots | `app/chat.py` | Historial, recorte, prompt de sistema, salida a humano |
-| 4 · Automatización | `app/lote.py`, `datos/reclamos.jsonl` | Lote con tope de paralelo, estado por mensaje, ensayo en seco |
-| 5 · Evaluación | `evals/` | Conjunto congelado, acierto, juez con criterios, camino del agente |
-| 6 · Despliegue | `app/trazas.py`, `Dockerfile`, `despliegue/` | OpenTelemetry a Langfuse, contenedor, Cloud Run |
+## Antes de escribir
 
-## Arrancar
+Necesita Python 3.11 o posterior y dos valores:
+
+- una clave de OpenRouter para que el servicio pueda llamar al modelo;
+- una clave propia para proteger el endpoint.
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate       # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
-cp .env.example .env    # completar OPENROUTER_API_KEY y API_KEY
+cp .env.example .env
+```
+
+Abra `.env`, reemplace los dos valores de muestra y deje el archivo fuera del
+repositorio. La clave del proveedor y la clave que protege su API son distintas.
+
+## El recorrido de la clase
+
+1. Levante el esqueleto y compruebe `GET /salud`.
+2. Escriba `Entrada` y `Salida` en `app/esquemas.py`.
+3. Escriba la llamada al proveedor en `app/modelo.py`.
+4. Complete `POST /reclamos` en `app/main.py`.
+5. Valide la entrada y la salida, y limite los reintentos.
+6. Agregue la clave `X-API-Key` y pruebe los errores.
+
+Arranque el servidor:
+
+```bash
 uvicorn app.main:app --reload
 ```
 
-El `.env` lo lee la aplicación sola, sin exportar nada a mano. Si falta una
-clave, el arranque dice cuál falta y dónde ponerla.
-
-Y en otra terminal:
+Abra <http://localhost:8000/docs>. También puede comprobar la salud desde otra
+terminal:
 
 ```bash
-curl -s -X POST localhost:8000/reclamos \
-  -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
+curl -s localhost:8000/salud
+```
+
+Al terminar, una petición válida se parece a esta:
+
+```bash
+curl -s -X POST localhost:8000/reclamos \\
+  -H "X-API-Key: su-clave" \\
+  -H "Content-Type: application/json" \\
   -d '{"id":"RCL-001","texto":"Me cobraron dos veces la factura de marzo.","canal":"correo"}'
 ```
 
-Sin la cabecera devuelve 401. Con el texto vacío, 422. Los dos son a propósito.
+La salida contiene `area`, `urgencia`, `confianza` y `evidencia`. El modelo no
+calcula devoluciones, no da de baja el servicio y no promete montos ni plazos.
 
-## El lote
+## Punto de control
+
+El laboratorio está listo cuando se cumplen las cuatro condiciones:
+
+- `/docs` abre y muestra `POST /reclamos`;
+- sin `X-API-Key`, el endpoint responde `401`;
+- un cuerpo inválido responde `422` sin llamar al modelo;
+- una entrada válida devuelve la salida del triaje con el esquema acordado.
+
+## Si se traban
+
+Guarde su trabajo y abra la solución de la sesión 2 en otra carpeta:
 
 ```bash
-python -m app.lote datos/reclamos.jsonl --dry-run   # dice qué haría
-python -m app.lote datos/reclamos.jsonl             # lo hace
+cd ..
+git clone --branch rescate/sesion-2 \\
+  https://github.com/jucarBM/construccion-aplicaciones-ia.git triaje-reclamos-rescate
+cd triaje-reclamos-rescate
 ```
 
-Se puede cortar con Ctrl-C y volver a correrlo: retoma donde quedó, porque cada
-mensaje guarda su estado. Correrlo dos veces no duplica nada.
+La rama de rescate contiene únicamente la solución de hoy. No es necesario
+copiarla al proyecto original ni usarla si el endpoint ya funciona.
 
-## La evaluación
+## Encargo
 
-```bash
-pytest evals/ -q                  # rápido
-deepeval test run evals/          # con el informe de DeepEval
-```
-
-**Se espera que unos doce `test_area` queden en rojo, y está bien.** La línea
-de base es 76% de acierto sobre cincuenta casos, así que una docena no coincide
-con la etiqueta humana. Eso no quiere decir que el laboratorio esté roto: sirve
-para mirar *cuáles* falla. El número que dice si el sistema está en pie es
-`test_acierto_global`, que sí falla de verdad si el acierto cae del 70%.
-
-La corrida manda los cincuenta casos al modelo una vez —no una vez por prueba—
-y tarda unos tres minutos. Con `-x` se corta en el primero, que no es lo que
-se quiere acá: conviene dejarla terminar y leer el porcentaje.
-
-`test_area` y `test_acierto_global` comparan con `==` y corren solo con la
-clave del servicio. `test_evidencia` usa GEval con criterios en castellano y
-necesita además `OPENAI_API_KEY`, la del modelo juez; sin ella se salta sola,
-igual que `test_camino`, porque DeepEval pide esa clave para arrancar aunque
-la métrica no juzgue con modelo.
-
-El conjunto de `evals/conjunto.jsonl` está congelado. Si se le agregan casos
-cada vez que algo falla, los números dejan de ser comparables entre corridas.
-
-## Las trazas
-
-Con `LANGFUSE_PUBLIC_KEY` y `LANGFUSE_SECRET_KEY` puestas, cada petición
-aparece en Langfuse con sus tramos y sus tokens. Sin ellas y con
-`TRAZAS=consola`, la traza sale por pantalla. Sin ninguna de las dos, no se
-exporta nada y el servicio anda igual: es lo que conviene en las sesiones 2 a 5.
-
-El plan Hobby de Langfuse es gratis y no pide tarjeta.
-
-Las convenciones `gen_ai` de OpenTelemetry todavía están en desarrollo y no son
-estables. Los atributos de chat que se usan acá son firmes; los de agentes se
-siguen moviendo.
-
-## Desplegar
-
-Paso a paso en [`despliegue/README.md`](despliegue/README.md), con Cloud Run y
-Secret Manager.
+Conserve este proyecto: en la próxima sesión se le agregará la conversación
+con historial sobre el mismo servicio.

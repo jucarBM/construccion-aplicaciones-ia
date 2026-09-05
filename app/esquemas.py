@@ -1,36 +1,14 @@
-"""Los contratos del servicio. Se escriben antes que el código, porque son lo
-único que otra persona necesita leer para consumirlo."""
+"""Los contratos del servicio. Escríbalos antes de tocar el endpoint."""
 
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
-Area = Literal["facturacion", "tecnico", "comercial", "otros"]
-Urgencia = Literal["baja", "media", "alta"]
+
+# TODO: defina Entrada con id, texto y canal.
+#       texto acepta entre 1 y 8000 caracteres.
+#       canal solo acepta correo, chat o formulario.
 
 
-class Entrada(BaseModel):
-    id: str
-    texto: str = Field(min_length=1, max_length=8000)
-    canal: Literal["correo", "chat", "formulario"]
-
-
-class Salida(BaseModel):
-    area: Area
-    urgencia: Urgencia
-    confianza: float = Field(ge=0, le=1)
-    evidencia: str = Field(
-        default="",
-        description="La frase del mensaje en la que se apoya la decisión. "
-        "Cuando alguien discuta una etiqueta, esto cierra la discusión.",
-    )
-
-
-class Analisis(BaseModel):
-    """Sesión 4: sentimiento, intención y urgencia en una sola llamada."""
-
-    sentimiento: Literal["negativo", "neutro", "positivo"]
-    intencion: Literal["reclamo", "consulta", "baja"]
-    urgencia: Urgencia
-    riesgo_baja: bool
-    evidencia: str = ""
+# TODO: defina Salida con area, urgencia, confianza y evidencia.
+#       Use Literal para las listas cerradas y Field para el rango de confianza.
