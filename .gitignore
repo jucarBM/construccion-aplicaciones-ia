@@ -1,6 +1,7 @@
+.env
+.venv/
 __pycache__/
 *.pyc
-.env
-*.sqlite
+.pytest_cache/
 .deepeval*
-.venv/
+*.sqlite
