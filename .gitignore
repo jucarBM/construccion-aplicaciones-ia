@@ -1,7 +1,14 @@
 .env
+.DS_Store
 .venv/
 __pycache__/
-*.pyc
 .pytest_cache/
-.deepeval*
-*.sqlite
+*.pyc
+crm/solicitudes/SOL-*.txt
+crm/analisis/
+
+.env.*
+!.env.example
+salidas/
+.deepeval/
+evidencia/
