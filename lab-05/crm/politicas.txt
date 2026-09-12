@@ -1,0 +1,2 @@
+tipo | dias | condiciones
+devolucion | 30 | Producto sin uso indebido; la solicitud será revisada antes de aprobarse.

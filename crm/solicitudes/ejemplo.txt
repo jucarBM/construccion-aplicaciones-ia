@@ -1,6 +1,0 @@
-solicitud_id: SOL-EJEMPLO
-pedido_id: P-1042
-cliente_id: C-001
-motivo: Recibí un producto distinto
-estado: ejemplo_no_operativo
-nota: Este archivo solo muestra el formato; no representa una solicitud creada.

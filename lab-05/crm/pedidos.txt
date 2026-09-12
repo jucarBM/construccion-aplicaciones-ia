@@ -1,0 +1,4 @@
+pedido_id | cliente_id | fecha | fecha_entrega | estado | producto | entregado
+P-1042 | C-001 | 2026-09-01 | 2026-09-04 | entregado | Audífonos negros | si
+P-1043 | C-001 | 2026-09-05 |  | en_transito | Taza azul | no
+P-2099 | C-OTRO | 2026-09-02 | 2026-09-05 | entregado | Mochila verde | si

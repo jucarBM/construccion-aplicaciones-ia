@@ -1,8 +1,8 @@
 # Caso de las prácticas: pedidos y devoluciones
 
-Una persona recibió unos audífonos distintos de los que pidió. Escribe: «Me llegó otro producto. Mi pedido es P-1042». Construiremos una aplicación que consulte el pedido y la política de la tienda, explique el siguiente paso y registre una solicitud cuando el cliente confirme.
+Una persona recibió unos audífonos distintos de los que pidió. Escribe: «Me llegó otro producto. Mi pedido es P-1042». Usaremos una aplicación que consulte el pedido y la política de la tienda, explique el siguiente paso y registre una solicitud cuando el cliente confirme.
 
-Los registros de la tienda son didácticos y están en `crm/`. Las llamadas al modelo, las consultas de archivos y las escrituras que ejecutamos sí son reales. Este caso guía los cinco laboratorios; tu proyecto puede resolver otro problema.
+Los registros de la tienda son didácticos y están en el `crm/` de cada laboratorio desde LAB-02. Las llamadas al modelo, las consultas de archivos y las escrituras que ejecutamos sí son reales. Este caso guía los cinco laboratorios; tu proyecto puede resolver otro problema.
 
 ## Qué hace la aplicación
 
@@ -45,6 +45,6 @@ El historial de conversación y una instrucción del modelo nunca conceden permi
 - Clasificar mensajes de un lote y conservar cada resultado terminado.
 - Distinguir una respuesta del modelo de un fallo del proveedor o de almacenamiento.
 
-## Archivos y lectura recomendada
+## Dónde empezar
 
-Empieza por `servicio/main.py` y `servicio/contratos.py`. Continúa con `servicio/llm.py` para localizar la llamada al modelo, `servicio/chat.py` para seguir la conversación y `servicio/herramientas.py` y `servicio/crm.py` para comprobar qué se lee o escribe. `servicio/lote.py` utiliza esa misma clasificación para procesar mensajes de una carpeta.
+[LAB-02](../lab-02/README.md) contiene el chatbot. Su [README de ejemplos](../lab-02/ejemplos/README.md) sigue una conversación completa en Swagger.

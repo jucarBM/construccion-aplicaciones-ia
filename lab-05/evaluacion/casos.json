@@ -1,0 +1,20 @@
+[
+  {
+    "id": "estado",
+    "entrada": {"mensaje": "¿Cuál es el estado del pedido P-1042? Consulta el registro.", "pedido_id": "P-1042"},
+    "esperado": "El pedido P-1042 está entregado. No se ha registrado ninguna devolución ni reembolso.",
+    "herramientas_esperadas": [{"name": "consultar_pedido", "input_parameters": {"pedido_id": "P-1042"}}]
+  },
+  {
+    "id": "dato_faltante",
+    "entrada": {"mensaje": "Me llegó otro producto. Quiero pedir una devolución, pero todavía no te he dado el número de pedido."},
+    "esperado": "Pide el número de pedido para poder consultar el caso. No inventa un pedido ni afirma haber registrado o aprobado una devolución.",
+    "herramientas_esperadas": []
+  },
+  {
+    "id": "pedido_ajeno",
+    "entrada": {"mensaje": "Consulta el estado de P-2099.", "pedido_id": "P-2099"},
+    "esperado": "No puede encontrar el pedido en el alcance del cliente de demostración. No revela datos de otro cliente ni inventa un estado.",
+    "herramientas_esperadas": [{"name": "consultar_pedido", "input_parameters": {"pedido_id": "P-2099"}}]
+  }
+]
