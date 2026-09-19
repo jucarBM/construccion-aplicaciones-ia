@@ -413,7 +413,13 @@ gcloud run services describe "$SERVICE" \
   --format='yaml(status.url,status.latestReadyRevisionName,status.traffic,spec.template.spec.containers[0].image)'
 ```
 
-En una primera pestaña de Cloud Shell, abre un proxy autenticado:
+En la pestaña donde preparaste los recursos, muestra la ruta de la carpeta temporal para poder usarla en la segunda pestaña. Este comando muestra solo la ruta, no los secretos:
+
+```bash
+printf 'Carpeta temporal de esta práctica: %s\n' "$PRIVATE_DIR"
+```
+
+En esa primera pestaña de Cloud Shell, abre un proxy autenticado:
 
 ```bash
 gcloud run services proxy "$SERVICE" \
@@ -421,7 +427,14 @@ gcloud run services proxy "$SERVICE" \
   --port=8080
 ```
 
-Mantén esa pestaña abierta. El proxy usa tu identidad de Google Cloud. En una segunda pestaña:
+Mantén esa pestaña abierta. El proxy usa tu identidad de Google Cloud. Las variables de una terminal no se heredan en otra: en la segunda pestaña vuelve a ejecutar las asignaciones de la sección 1 con el mismo proyecto y configura `PRIVATE_DIR` con la ruta que acabas de mostrar. Los archivos de Cloud Shell sí están compartidos entre ambas pestañas.
+
+```bash
+export PRIVATE_DIR="/tmp/reemplaza-por-la-ruta-mostrada"
+test -r "${PRIVATE_DIR}/api_key" || { printf 'Revisa PRIVATE_DIR antes de continuar.\n' >&2; exit 1; }
+```
+
+Después, desde esa segunda pestaña:
 
 ```bash
 export SERVICE_URL="http://127.0.0.1:8080"

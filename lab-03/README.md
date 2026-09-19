@@ -47,14 +47,16 @@ Ejecutar la aplicación completa de LAB-02 más el procesamiento de mensajes TXT
 
 Completa la [preparación de esta carpeta](#preparación). El lote funciona desde la terminal y no requiere iniciar Uvicorn.
 
-## 1. Observa el fallo y la reanudación sin proveedor
+## 1. Demostración docente con Swagger y código
+
+Sigue [GUIA-SWAGGER-S4.md](GUIA-SWAGGER-S4.md): orden de archivos, explicación de la integración LLM y JSON para copiar en cada endpoint. El docente ejecuta y explica; los alumnos reciben el repositorio. No se utiliza `demostraciones.py`.
 
 ```bash
 python -m pytest -q
-python demostraciones.py lote
+python -m uvicorn servicio.main:app --reload --port 8000
 ```
 
-La demostración usa el bucle real con un clasificador controlado y un CRM temporal. A y C terminan, B falla una vez. Al reanudar, solo B se clasifica. Debes observar dos procesados y un error; luego un procesado y dos omitidos. La secuencia de llamadas es A, B, C, B. No modifica tu CRM ni consume el LLM.
+Abre http://127.0.0.1:8000/docs. Clasificación y chat necesitan proveedor configurado. `/api/clasificar` devuelve JSON; no guarda análisis. El lote de terminal sí guarda ANA. Langfuse corresponde a LAB-05/S6.
 
 ## 2. Ejecuta la carpeta de mensajes con el proveedor real
 
@@ -84,7 +86,7 @@ La creación exclusiva de archivos evita reemplazar un resultado. Si dos proceso
 
 ## Qué conservar
 
-Los resúmenes de primera ejecución, repetición y recuperación; un ANA y su mensaje; las llamadas de la demostración; una explicación de sentimiento y urgencia basada en el texto.
+Los resúmenes de primera ejecución, repetición y recuperación; un ANA y su mensaje; la petición y respuesta del proveedor; una explicación de sentimiento y urgencia basada en el texto.
 
 
 [Proyecto del curso](../PROYECTO.md) · [Plantilla de entrega](../PLANTILLA-PROYECTO.md)
